@@ -61,7 +61,6 @@ class Petal:
 
 
 class Flower:
-    # Оставили только 4 обязательных позиционных аргумента
     def __init__(self, x, y, scale, tilt):
         self.x = x
         self.y = y
