@@ -1,0 +1,12 @@
+---input01.txt--- 
+Max perimeter: Circle 21 
+Max area: Circle 21
+ 
+---input02.txt--- 
+Max perimeter: Circle 25 
+Max area: Circle 25
+ 
+---input03.txt--- 
+Max perimeter: Circle 25 
+Max area: Circle 25
+ 
