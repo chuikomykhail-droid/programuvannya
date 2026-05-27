@@ -1,0 +1,26 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Shape {
+  +dimention()
+  +perimetr()
+  +square()
+  +squareSurface()
+  +squareBase()
+  +height()
+  +volume()
+}
+
+Shape <|-- Triangle
+Shape <|-- Rectangle
+Shape <|-- Trapeze
+Shape <|-- Parallelogram
+Shape <|-- Circle
+Shape <|-- Ball
+
+Triangle <|-- TriangularPyramid
+Triangle <|-- TriangularPrism
+Rectangle <|-- QuadrangularPyramid
+Rectangle <|-- RectangularParallelepiped
+Circle <|-- Cone
+@enduml
