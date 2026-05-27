@@ -37,7 +37,8 @@ class Triangle(Shape):
         return self.a + self.b + self.c
 
     def square(self):
-        p = self.perimetr() / 2
+        # Считаем полупериметр напрямую, не вызывая self.perimetr()
+        p = (self.a + self.b + self.c) / 2
         x = p * (p - self.a) * (p - self.b) * (p - self.c)
         if x < 0:
             return 0
@@ -45,7 +46,6 @@ class Triangle(Shape):
 
     def volume(self):
         return self.square()
-
 
 class Rectangle(Shape):
     def __init__(self, a, b):
@@ -138,6 +138,16 @@ class Ball(Shape):
     def dimention(self):
         return 3
 
+    def perimetr(self):
+        return None
+
+    def square(self):
+        return None
+
+    def squareSurface(self):
+        # Площадь поверхности шара: 4 * pi * r^2
+        return 4 * math.pi * (self.r ** 2)
+
     def volume(self):
         return (4 / 3) * math.pi * (self.r ** 3)
 
@@ -149,6 +159,19 @@ class TriangularPyramid(Triangle):
 
     def dimention(self):
         return 3
+
+    def perimetr(self):
+        return None
+
+    def square(self):
+        return None
+
+    def squareSurface(self):
+        # Апофема правильной треугольной пирамиды
+        r_in = (self.a * math.sqrt(3)) / 6
+        l = math.sqrt(self.h ** 2 + r_in ** 2)
+        # Боковая площадь: 3 треугольника
+        return 3 * 0.5 * self.a * l
 
     def squareBase(self):
         return super().square()
@@ -168,6 +191,19 @@ class QuadrangularPyramid(Rectangle):
     def dimention(self):
         return 3
 
+    def perimetr(self):
+        return None
+
+    def square(self):
+        return None
+
+    def squareSurface(self):
+        # Высоты боковых граней (апофемы)
+        la = math.sqrt(self.h ** 2 + (self.b / 2) ** 2)
+        lb = math.sqrt(self.h ** 2 + (self.a / 2) ** 2)
+        # Боковая площадь: 2 грани с основанием a, 2 грани с основанием b
+        return self.a * la + self.b * lb
+
     def squareBase(self):
         return super().square()
 
@@ -185,6 +221,16 @@ class RectangularParallelepiped(Rectangle):
 
     def dimention(self):
         return 3
+
+    def perimetr(self):
+        return None
+
+    def square(self):
+        return None
+
+    def squareSurface(self):
+        # Периметр основания на высоту
+        return super().perimetr() * self.c
 
     def squareBase(self):
         return super().square()
@@ -204,6 +250,17 @@ class Cone(Circle):
     def dimention(self):
         return 3
 
+    def perimetr(self):
+        return None
+
+    def square(self):
+        return None
+
+    def squareSurface(self):
+        # Площадь боковой поверхности конуса: pi * r * l
+        l = math.sqrt(self.r ** 2 + self.h ** 2)
+        return math.pi * self.r * l
+
     def squareBase(self):
         return super().square()
 
@@ -221,6 +278,16 @@ class TriangularPrism(Triangle):
 
     def dimention(self):
         return 3
+
+    def perimetr(self):
+        return None
+
+    def square(self):
+        return None
+
+    def squareSurface(self):
+        # Боковая поверхность прямой призмы = периметр основания * высоту
+        return super().perimetr() * self.h
 
     def squareBase(self):
         return super().square()
