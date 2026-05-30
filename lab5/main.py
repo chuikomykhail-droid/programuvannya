@@ -1,3 +1,7 @@
+class SentenceError(Exception):
+    pass
+
+
 class Sentence:
     def __init__(self, data=None):
         if isinstance(data, Sentence):
@@ -11,7 +15,6 @@ class Sentence:
 
     def __str__(self):
         text_str = " ".join(self.words)
-        count_str = str(len(self.words))
         return text_str
 
     def __len__(self):
@@ -21,14 +24,17 @@ class Sentence:
         return self.words[index]
 
     def __setitem__(self, index, value):
-        self.words[index] = str(value)
+        if not isinstance(value, str):
+            raise SentenceError(f"Помилка заміни: значення '{value}' не є рядком (str). Отримано тип {type(value).__name__}.")
+        self.words[index] = value
 
     def __add__(self, other):
         if isinstance(other, Sentence):
             return Sentence(self.words + other.words)
         elif isinstance(other, str):
             return Sentence(self.words + [other])
-        return Sentence(self.words)
+        else:
+            raise SentenceError(f"Помилка додавання (+): неприпустимий тип правого операнда '{type(other).__name__}'. Очікується Sentence або str.")
 
     def __sub__(self, other):
         if isinstance(other, Sentence):
@@ -43,29 +49,37 @@ class Sentence:
                 if w != other:
                     new_words.append(w)
             return Sentence(new_words)
-        return Sentence(self.words)
+        else:
+            raise SentenceError(f"Помилка віднімання (-): неприпустимий тип правого операнда '{type(other).__name__}'. Очікується Sentence або str.")
 
     def __contains__(self, item):
         return item in self.words
 
 
-with open("text.txt", "r", encoding="utf-8") as f1:
-    raw_text = f1.read()
-    f1.close()
+try:
+    with open("text.txt", "r", encoding="utf-8") as f1:
+        raw_text = f1.read()
+except FileNotFoundError:
+    raw_text = "Hello world this is a test text to check how words are replaced and deleted"
 
 text = Sentence(raw_text)
 
 words_to_replace = {}
-with open("replace.txt", "r", encoding="utf-8") as f2:
-    lines = f2.readlines()
-    f2.close()
-    for line in lines:
-        s = line.split()
-        words_to_replace[s[0]] = s[1]
+try:
+    with open("replace.txt", "r", encoding="utf-8") as f2:
+        lines = f2.readlines()
+        for line in lines:
+            s = line.split()
+            if len(s) >= 2:
+                words_to_replace[s[0]] = s[1]
+except FileNotFoundError:
+    words_to_replace = {"test": "exam"}
 
-with open("delete.txt", "r", encoding="utf-8") as f3:
-    delete_text = f3.read()
-    f3.close()
+try:
+    with open("delete.txt", "r", encoding="utf-8") as f3:
+        delete_text = f3.read()
+except FileNotFoundError:
+    delete_text = "world"
 
 words_to_delete = Sentence(delete_text)
 
@@ -76,8 +90,27 @@ for i in range(len(text)):
         text[i] = words_to_replace[current_word]
 
 text = text - words_to_delete
+
 with open("result.txt", "w", encoding="utf-8") as f:
     f.write(f"LENGTH:{len(text)}" + "\n")
     f.write(str(text))
-    f.close()
-print(len(text))
+
+print(f"Кількість слів після обробки: {len(text)}")
+
+
+test_sentence = Sentence("Це тестове речення")
+
+try:
+    test_sentence[0] = 123
+except SentenceError as e:
+    print(f"Спіймано виключення: {e}")
+
+try:
+    res = test_sentence + 42
+except SentenceError as e:
+    print(f"Спіймано виключення: {e}")
+
+try:
+    res = test_sentence - ["тестове"]
+except SentenceError as e:
+    print(f"Спіймано виключення: {e}")
